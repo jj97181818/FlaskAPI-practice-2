@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Resource, Api
 
 app = Flask(__name__)
@@ -17,12 +17,24 @@ class Item(Resource):
                 
 
     def post(self, name):
-        item = {"name": name, "price": 100}
+        # If set force = True, it will not check the header of request and do the processing even it's not correct
+        # data = request.get_json(force=True)
+        # If set silent = True, it will not send errors but returns none.
+        # data = request.get_json(silent=True)
+        data = request.get_json()
+        item = {"name": name, "price": data['price']}
         items.append(item)
         # return the item and the status code 201 which means the object has been successfully created
         return item, 201
 
-api.add_resource(Item, '/item/<string:name>') 
+class ItemList(Resource):
+    def get(self):
+        return {"items": items}
 
-app.run(port=5000)
+
+api.add_resource(Item, '/item/<string:name>') 
+api.add_resource(ItemList, '/items')
+
+# run the app and get the error message
+app.run(port=5000, debug=True)
 
