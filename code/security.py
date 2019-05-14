@@ -10,7 +10,7 @@ username_mapping = {
 }
 
 userid_mapping = { 
-    u.userid: u for u in users
+    u.id: u for u in users
 }
 
 def authenticate(username, password):
