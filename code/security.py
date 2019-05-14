@@ -1,26 +1,16 @@
 from user import User
 
 # let us immediately get the data by knowing the username or userid
-user = [
-    {
-        'id': 1,
-        'username': 'Jane',
-        'password': 'qwer'
-    }
+users = [
+    User(1, 'Jane', 'qwer')
 ]
 
-username_mapping = { 'Jane': {
-        'id': 1,
-        'username': 'Jane',
-        'password': 'qwer'
-    }
+username_mapping = { 
+    u.username: u for u in users
 }
 
-userid_mapping = { 1: {
-        'id': 1,
-        'username': 'Jane',
-        'password': 'qwer'
-    }
+userid_mapping = { 
+    u.userid: u for u in users
 }
 
 def authenticate(username, password):
