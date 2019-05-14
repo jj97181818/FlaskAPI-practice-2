@@ -8,23 +8,23 @@ items = []
 
 class Item(Resource):
     def get(self, name):
-        for item in items:
-            if item["name"] == name:
-                # Just return the dictionary. Do not need to use jsonify, because the flask_restful does it. 
-                return item  
-        # return null and add status code 404     
-        return {"item": None}, 404
+        # filter return filter object
+        # list() convert the filter object to list
+        # next() give the first item found in filter function. 
+        # If you call next() again, you will get the second item, and so on.
+        # If there is no item matched, return None
+        item = next(filter(lambda x: x['name'] == name, items), None)
+        return {"item": None}, 200 if item else 404
+        # 200 if item is not None else 404
                 
 
     def post(self, name):
-        # If set force = True, it will not check the header of request and do the processing even it's not correct
-        # data = request.get_json(force=True)
-        # If set silent = True, it will not send errors but returns none.
-        # data = request.get_json(silent=True)
+        # if there exists an item matched, and return is not None
+        if next(filter(lambda x: x['name'] == name, items), None):
+            return {"message": "An item with name '{}' already exists.".format(name)}, 400 
         data = request.get_json()
         item = {"name": name, "price": data['price']}
         items.append(item)
-        # return the item and the status code 201 which means the object has been successfully created
         return item, 201
 
 class ItemList(Resource):
