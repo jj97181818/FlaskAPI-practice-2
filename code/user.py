@@ -13,14 +13,11 @@ class User:
         cursor = connection.cursor()
 
         query = "SELECT * FROM users WHERE username = ?"
-        # the parameter need tuple, although there is only one parameter
         result = cursor.execute(query, (username,))
         row = result.fetchone()
 
         if row:
-            # passing it as a set of arguments
             user = cls(*row)
-            #user = cls(row[0], row[1], row[2]) # using the current class (Not hard coding the class name here)
         else:
             user = None
 
@@ -33,14 +30,12 @@ class User:
         cursor = connection.cursor()
 
         query = "SELECT * FROM users WHERE id = ?"
-        # the parameter need tuple, although there is only one parameter
+
         result = cursor.execute(query, (_id,))
         row = result.fetchone()
 
         if row:
-            # passing it as a set of arguments
             user = cls(*row)
-            #user = cls(row[0], row[1], row[2]) # using the current class (Not hard coding the class name here)
         else:
             user = None
 
@@ -65,10 +60,13 @@ class UserRegister(Resource):
 
     def post(self):
         data = UserRegister.parser.parse_args()
+
+        if User.find_by_username(data['username']):
+            return {'message', 'The user already exists.'}, 400
+
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
-        # Because column 0 is auto incremented, it use NULL. 
         query = "INSERT INTO users VALUES (NULL, ?, ?)"
         cursor.execute(query, (data['username'], data['password']))
 
