@@ -16,5 +16,8 @@ api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
 api.add_resource(UserRegister, '/register')
 
-app.run(port=5000, debug=True)
+# Avoid running app.run() many times if other files import app.py
+# Only the file we run is the __main__
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
 
